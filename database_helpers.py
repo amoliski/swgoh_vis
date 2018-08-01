@@ -2,6 +2,7 @@
 import mysql.connector as msql
 import random
 from pyquery import PyQuery as pq
+import json
 
 """
 Notes:
@@ -20,9 +21,9 @@ order by mt desc, user_id desc;
 def sql_connect():
     connection_props = json.load(open('../db_connection', 'r'));
     return msql.connect(
-        user=connection_props['user']
-        password=connection_props['password']
-        database=connection_props['database']
+        user=connection_props['user'],
+        password=connection_props['password'],
+        database=connection_props['database'],
         host=connection_props['host']
     )
 
