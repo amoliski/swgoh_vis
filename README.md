@@ -6,7 +6,7 @@ Example: http://amoliski.pythonanywhere.com/swgoh/cotd
 
 ### Populating the database :
 
-**update_db.py:**
+**update_db.py**
 Cron: Midnight and Noon
 Updates the total Guild GP and the individual user GP
 
