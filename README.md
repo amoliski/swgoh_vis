@@ -4,7 +4,7 @@ Scrapes Star Wars Galaxy of Heroes guild data and stores it in a terribly struct
 
 Example: http://amoliski.pythonanywhere.com/swgoh/cotd
 
-###Cron :
+### Cron :
 
 **update_db.py:**
 Midnight and Noon
