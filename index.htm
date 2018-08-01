@@ -1,0 +1,558 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CotD Vis</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/4.0/examples/dashboard/dashboard.css" rel="stylesheet">
+    <style>
+.hidden{
+    display: none;
+}
+
+.char-portrait-img {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    background-color: #111;
+}
+
+.char-portrait-dark-side .char-portrait-image {
+    border-color: #b03233;
+    box-shadow: 0 0 3px 2px rgba(176,50,51,.8) inset;
+}
+.char-portrait-image {
+    position: relative;
+    overflow: hidden;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #333;
+    box-shadow: 0 0 3px 2px rgba(0,0,0,.8) inset;
+}
+#slide_menu{
+    position: absolute;
+        top: 49px;
+        bottom: 0;
+        left: 0;
+        width: 235px;
+        background-color: white;
+        border-right: 1px solid #bdbdbd;
+        box-shadow: 1px 1px 5px #9898989c;
+        transform: translateX(-250px);
+        transition: transform 0.2s ease;
+}
+#slide_menu.open{
+        transform: translateX(0px);
+}
+.menu-toggler{
+    position: absolute;
+    height: 46px;
+    width: 55px;
+    background-color: white;
+    top: 8px;
+    left: 250px;
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid #a5a5a59e;
+    border-left: none;
+}
+#slide_menu.open .menu-toggler{
+   left: 234px;
+}
+.menu-toggler .icon {
+      width: 30px;
+      height: 4px;
+      background-color: black;
+      position: absolute;
+      top: 21px;
+      left: 12px;
+      transition: transform 0.2s;
+      transition-delay: 0.2s;
+}
+.menu-toggler .icon:before,.menu-toggler .icon:after {
+  width: 30px;
+  height: 4px;
+  background-color: black;
+  content: "";
+  position: absolute;
+  left: 0;
+        transition: transform 0.2s;
+      transition-delay: 0.2s;
+}
+
+
+.sidebar.open .menu-toggler .icon {
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.sidebar.open .menu-toggler .icon:before {
+  -webkit-transform: translateY(9px);
+  -ms-transform: translateY(9px);
+  transform: translateY(9px);
+}
+
+.sidebar.open .menu-toggler .icon:after {
+  -webkit-transform: translateY(-9px) rotate(-90deg);
+  -ms-transform: translateY(-9px) rotate(-90deg);
+  transform: translateY(-9px) rotate(-90deg);
+}
+
+
+.menu-toggler .icon:before {
+  top: -9px;
+}
+
+.menu-toggler .icon:after {
+  top: 9px;
+}
+
+
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Coalition of the Damned</a>
+</nav>
+
+<div id="slide_menu" class="sidebar">
+
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Charts</span>
+                </h6>
+
+                <ul class="nav flex-column" id="slide_charts_menu">
+
+                </ul>
+
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Units of Note</span>
+                </h6>
+
+                <ul class="nav flex-column" id="slide_uon_menu">
+
+                </ul>
+
+                <div class='menu-toggler'>
+                    <div class='icon'></div>
+                </div>
+
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Charts</span>
+                </h6>
+
+                <ul class="nav flex-column" id="charts_menu">
+
+                </ul>
+
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Units of Note</span>
+                </h6>
+
+                <ul class="nav flex-column" id="uon_menu">
+
+                </ul>
+
+                <!--h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Other Tools</span>
+                </h6>
+
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#units_of_note" id="units_of_interest_link">
+                            <span data-feather="users"></span>
+                            Units of Interest
+                        </a>
+                    </li>
+
+                </ul-->
+            </div>
+        </nav>
+
+
+
+
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                <h1  style='display:none' class="h2">Dashboard</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <!--<div class="btn-group mr-2">-->
+                        <!--<button class="btn btn-sm btn-outline-secondary">Share</button>-->
+                        <!--<button class="btn btn-sm btn-outline-secondary">Export</button>-->
+                    <!--</div>-->
+                    <!--<button class="btn btn-sm btn-outline-secondary dropdown-toggle">-->
+                        <!--<span data-feather="calendar"></span>-->
+                        <!--This week-->
+                    <!--</button>-->
+                </div>
+            </div>
+            <div class="hidden" id="main_chars">
+                <div id="wrapper" style="position: relative; height: calc(100vh - 125px);">
+                    <canvas class="my-4" id="chart"></canvas>
+                </div>
+
+            </div>
+            <div class="hidden" id="unit_charts">
+
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+
+<script src="../../../../assets/js/vendor/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+
+<!-- Graphs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js"></script>
+<script>
+
+    var data = null;
+    var chart = null;
+
+    $.getJSON('http://amoliski.pythonanywhere.com/static/cache.json?i=6', function(e){
+        init_dashboard(e);
+        data = e;
+    });
+
+
+    function init_dashboard(data){
+
+        $('.menu-toggler').click(function(){$('#slide_menu').toggleClass('open');})
+        build_sidebar_menu(data);
+    }
+
+    function build_sidebar_menu(data){
+        var sidebar_charts = $('#charts_menu');
+        var units_of_note = $('#uon_menu');
+        var slide_sidebar_charts = $('#slide_charts_menu');
+        var slide_units_of_note = $('#slide_uon_menu');
+        for(var i = 0; i < data.charts.length; i++){
+            var chart = data.charts[i];
+            var li = $("<li></li>").addClass('nav-item');
+            var hash = chart.hash;
+            var a = $("<a></a>").addClass('nav-link').attr('href', '#'+hash);
+            var icon = $("<span></span>").attr('data-feather', chart.icon);
+            var name = $("<span></span>").text(chart.name);
+            li.append(a);
+            a.append(icon);
+            a.append(name);
+            sidebar_charts.append(li);
+
+            li.on('click', load_chart.bind(this, chart, hash, 0));
+        }
+        for(var i = 0; i < data.charts.length; i++){
+            var chart = data.charts[i];
+            var li = $("<li></li>").addClass('nav-item');
+            var hash = chart.hash;
+            var a = $("<a></a>").addClass('nav-link').attr('href', '#'+hash);
+            var icon = $("<span></span>").attr('data-feather', chart.icon);
+            var name = $("<span></span>").text(chart.name);
+            li.append(a);
+            a.append(icon);
+            a.append(name);
+            slide_sidebar_charts.append(li);
+
+            li.on('click', load_chart.bind(this, chart, hash, 0));
+        }
+
+        for(var i = 0; i < data.unit_counts.length; i++){
+            var chart = data.unit_counts[i];
+            var li = $("<li></li>").addClass('nav-item');
+            var hash = chart.hash;
+            var a = $("<a></a>").addClass('nav-link').attr('href', '#'+hash);
+            var icon = $("<span></span>").attr('data-feather', chart.icon);
+            var name = $("<span></span>").text(chart.group_name);
+            li.append(a);
+            a.append(icon);
+            a.append(name);
+            units_of_note.append(li);
+            li.on('click', load_unit_charts.bind(this, data.unit_counts, i));
+
+        }
+        for(var i = 0; i < data.unit_counts.length; i++){
+            var chart = data.unit_counts[i];
+            var li = $("<li></li>").addClass('nav-item');
+            var hash = chart.hash;
+            var a = $("<a></a>").addClass('nav-link').attr('href', '#'+hash);
+            var icon = $("<span></span>").attr('data-feather', chart.icon);
+            var name = $("<span></span>").text(chart.group_name);
+            li.append(a);
+            a.append(icon);
+            a.append(name);
+            slide_units_of_note.append(li);
+            li.on('click', load_unit_charts.bind(this, data.unit_counts, i));
+
+        }
+        $('#units_of_interest_link').on('click', load_unit_charts.bind(this, data.unit_counts))
+
+        var hash = window.location.hash;
+        if(hash == ""){
+            $('.sidebar-sticky a').eq(0).click();
+        }else{
+            $('a[href$="'+hash+'"]').eq(0).click();
+        }
+
+        feather.replace();
+    }
+
+    function load_unit_charts(unit_charts, index){
+        $('#main_chars').addClass('hidden');
+        let selected_chart = unit_charts[index];
+        let hash = selected_chart.hash;
+
+        $('a').removeClass('active');
+        $("a[href='#"+hash+"']").addClass("active");
+
+        var container = $('#unit_charts');
+        container.removeClass('hidden');
+        container.empty();
+
+        let unit_list = selected_chart.units;
+        for(var chart in unit_list){
+            if(!unit_list.hasOwnProperty(chart)) continue;
+
+            var div = $("<div style=\"display:inline-block;width:450px;height:400px;padding:2em;\"></div>").appendTo(container);
+            var h2 = $("<h2 style='text-align:center'></h2>").text(chart).appendTo(div);
+            var canvas = $('<canvas height="225px"></canvas>').appendTo(div);
+
+            var palette = ['#FFC300', '#47C652','#3EAEE8','#786AFF','#CB56E8','#FF3635','#AD2524','#6E1717','#696969'];
+
+            var names = [];
+            var names_w = [];
+            var names_m = [];
+            var stars = [];
+            var colors = [];
+            var colors_w = [];
+            var colors_m = [];
+
+            var unit = unit_list[chart];
+            var circle_order = [];
+            var index = [];
+
+            for(var tier_index = 0; tier_index < unit.length; tier_index++){
+            	var tier = unit[tier_index];
+            	var current_index = {};
+            	for(var star_level_index = 0; star_level_index < tier.length; star_level_index++){
+                	var star_level = tier[star_level_index];
+            		for(var user_index = 0; user_index < star_level.length; user_index++){
+                    	var user_name = star_level[user_index];
+            			current_index[user_name] = 7-star_level_index;
+            		}
+            	}
+            	index.push(current_index);
+            }
+
+
+            for(var i = 0; i < unit[0].length; i++){
+            	var star_group = unit[0][i];
+            	for(var j = 0; j < star_group.length; j++){
+            	    var username = star_group[j];
+            	    circle_order.push(username);
+            	    var startext = (i == 8) ? "Not Unlocked" : (i == 0) ? "G12": ((8-i) + " Stars");
+            	    names.push(username + " - " + startext);
+            	    colors.push(palette[i]);
+
+            	}
+            }
+
+
+            for(var i = 0; i < circle_order.length; i++){
+                var username = circle_order[i];
+
+                var unit_level = 7;
+                var startext = "";
+
+                unit_level = index[1][username];
+        	    startext = "Last Week - "+((unit_level == 0) ? "Not Unlocked" : ((unit_level) + " Stars"));
+        	    names_w.push(username + " - " + startext);
+        	    colors_w.push(palette[7-unit_level]);
+
+                unit_level = index[2][username];
+        	    startext = "Last Month - "+((unit_level == 0) ? "Not Unlocked" : ((unit_level) + " Stars"));
+        	    names_m.push(username + " - " + startext);
+        	    colors_m.push(palette[7-unit_level]);
+
+            }
+
+
+            var config = {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data:  names.map(function(e){ return 1;}), //unit_charts[chart].map(function(e){return e.length}),
+                        backgroundColor: colors,
+                        label: 'Latest'
+                    },{
+                        data:  names.map(function(e){ return 1;}), //unit_charts[chart].map(function(e){return e.length}),
+                        backgroundColor: colors_w,
+                        label: '1 Week Ago'
+                    },{
+                        data:  names.map(function(e){ return 1;}), //unit_charts[chart].map(function(e){return e.length}),
+                        backgroundColor: colors_m,
+                        label: '1 Month Ago'
+                    },
+
+                    ],
+                    labels: names,
+                    labels_w: names_w,
+                    labels_m: names_m,
+                },
+                options: {
+                    responsive: true,
+                    legend: {
+                        display: false,
+                        position: 'top',
+                    },
+                    title: {
+                        display: false,
+                    },
+                    animation: {
+                        animateScale: false,
+                        animateRotate: false
+                    },
+                    tooltips: {
+                        enabled: true,
+                        mode: 'single',
+                        callbacks: {
+                            label: function(tooltipItems, data) {
+                                switch(tooltipItems.datasetIndex){
+                                case 0:
+                                    return data.labels[tooltipItems.index];
+                                case 1:
+                                    return data.labels_w[tooltipItems.index];
+                                case 2:
+                                    return data.labels_m[tooltipItems.index];
+                                }
+                            }
+                        }
+                    },
+                }
+            };
+
+            var ctx = canvas[0].getContext('2d');
+            new Chart(ctx, config);
+
+            //var img = new Image("https://swgoh.gg/static/img/assets/tex.charui_gamorreanguard.png")
+            //ctx.drawImage(img, 50, 50);
+
+
+
+        }
+
+
+    }
+
+    function load_chart(charts, hash, idx){
+        $('#main_chars').removeClass('hidden');
+        $('#unit_charts').addClass('hidden');
+
+        var selected_chart = charts.charts[idx];
+
+        var ctx = document.getElementById("chart");
+        if(chart){
+            chart.destroy();
+        }
+        var opts = selected_chart.options;
+
+        opts.scales.yAxes[0].ticks = {'callback':function(x){return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}}
+        if(!opts.legend){
+            opts.legend = {};
+        };
+        opts.legend.onHover = function(e, legend_item){
+                            for(var i = 0; i < chart.data.datasets.length; i++){
+                                if(chart.data.datasets[i].transColor){
+                                    chart.data.datasets[i].backgroundColor = chart.data.datasets[i].transColor;
+                                    chart.data.datasets[i].borderColor = chart.data.datasets[i].transColor;
+                                }
+                            }
+                            var dsi = legend_item.datasetIndex;
+                            chart.hoveringLegendIndex = dsi;
+                            var ds = chart.data.datasets[dsi];
+                            ds.backgroundColor = "red";
+                            ds.borderColor = "red";
+
+                            chart.update()
+                        };
+
+
+        chart = new Chart(ctx, {
+            type: selected_chart.type,
+            data: selected_chart.data,
+            options: opts
+        });
+
+        chart.hoveringLegendIndex = -1
+            chart.canvas.addEventListener('mousemove', function(e) {
+              if (chart.hoveringLegendIndex >= 0) {
+                if (e.layerX < chart.legend.left || chart.legend.right < e.layerX
+                  || e.layerY < chart.legend.top || chart.legend.bottom < e.layerY
+                ) {
+                  chart.hoveringLegendIndex = -1
+                  for (var i = 0; i < chart.data.datasets.length; i++) {
+                    var dataset = chart.data.datasets[i]
+                    dataset.borderColor = dataset.backupColor
+                    dataset.backgroundColor = dataset.backupColor
+                  }
+                  chart.update()
+                }
+              }
+            })
+
+
+
+        $('.sidebar-sticky a').removeClass('active');
+        $("a[href='#"+hash+"']").addClass("active");
+
+    }
+
+
+
+
+
+
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-122701369-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-122701369-1');
+</script>
+</body>
+</html>
+
